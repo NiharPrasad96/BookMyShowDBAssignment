@@ -1,0 +1,66 @@
+Part 1
+
+CREATE TABLE Theatre (
+    theatre_id INT PRIMARY KEY,
+    theatre_name VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Movie (
+    movie_id INT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    duration INT NOT NULL,
+    genre VARCHAR(50),
+    language VARCHAR(50)
+);
+
+CREATE TABLE Date (
+    date_id INT PRIMARY KEY,
+    show_date DATE UNIQUE NOT NULL
+);
+
+CREATE TABLE Show (
+    show_id INT PRIMARY KEY,
+    theatre_id INT,
+    movie_id INT,
+    date_id INT,
+    show_time TIME NOT NULL,
+    FOREIGN KEY (theatre_id) REFERENCES Theatre(theatre_id),
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (date_id) REFERENCES Date(date_id)
+);
+
+-- Sample Entries
+INSERT INTO Theatre (theatre_id, theatre_name, location)
+VALUES (1, 'PVR Cinemas', 'Downtown'), (2, 'Inox', 'Mall Avenue');
+
+INSERT INTO Movie (movie_id, title, duration, genre, language)
+VALUES 
+(1, 'Inception', 148, 'Sci-Fi', 'English'), 
+(2, 'Dangal', 161, 'Drama', 'Hindi');
+
+INSERT INTO Date (date_id, show_date)
+VALUES (1, '2024-11-01'), (2, '2024-11-02'), (3, '2024-11-03');
+
+INSERT INTO Show (show_id, theatre_id, movie_id, date_id, show_time)
+VALUES 
+(1, 1, 1, 1, '14:30:00'), 
+(2, 1, 2, 1, '18:30:00'),
+(3, 2, 1, 2, '16:30:00');
+
+Part 2
+
+SELECT 
+    M.title AS movie_title,
+    S.show_time
+FROM 
+    Show S
+JOIN 
+    Movie M ON S.movie_id = M.movie_id
+JOIN 
+    Theatre T ON S.theatre_id = T.theatre_id
+JOIN 
+    Date D ON S.date_id = D.date_id
+WHERE 
+    T.theatre_name = 'PVR Cinemas'
+    AND D.show_date = '2024-11-01';
